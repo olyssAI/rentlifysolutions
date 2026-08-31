@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Fraunces, Geist, Geist_Mono, Plus_Jakarta_Sans } from 'next/font/google'
 import NextTopLoader from 'nextjs-toploader'
 
+import { PathnameChangeScrollRestoration } from '@/components/pathname-change-scroll-restoration'
 import { SiteFooter } from '@/components/site-footer'
 import { SiteHeader } from '@/components/site-header'
 import { rentlifyWebsiteUrl } from '@/configuration/search-engine-metadata'
@@ -86,6 +87,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationStructuredData) }}
         />
         <NextTopLoader color="#6d35b4" height={2} shadow={false} showSpinner={false} />
+        <PathnameChangeScrollRestoration />
         <SiteHeader />
         {children}
         <SiteFooter />

@@ -31,7 +31,7 @@ export const requireCustomer = async (request: Request, response: Response, next
 
 export const requireCustomerMutationOrigin = (request: Request, response: Response, next: NextFunction) => {
   const origin = request.get('origin')
-  if (!origin || origin === environment.FRONTEND_ORIGIN || origin === 'rentlify-eats://') {
+  if (!origin || environment.FRONTEND_ORIGINS.includes(origin) || origin === 'rentlify-eats://') {
     next()
     return
   }

@@ -18,13 +18,13 @@ import { contactEnquiryRouter } from './modules/contact-enquiries/contact-enquir
 export const createApplication = (): express.Express => {
   const application = express()
   const operationalApplicationCors = cors({
-    origin: environment.FRONTEND_ORIGIN,
+    origin: environment.FRONTEND_ORIGINS,
     credentials: true,
     methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Idempotency-Key'],
   })
   const marketingContactCors = cors({
-    origin: environment.MARKETING_SITE_ORIGIN,
+    origin: environment.MARKETING_SITE_ORIGINS,
     methods: ['POST', 'OPTIONS'],
     allowedHeaders: ['Content-Type'],
   })

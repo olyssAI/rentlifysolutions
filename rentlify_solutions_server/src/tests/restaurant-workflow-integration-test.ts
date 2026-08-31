@@ -29,7 +29,7 @@ try {
 
   const address = server.address() as AddressInfo
   const serverUrl = `http://127.0.0.1:${address.port}`
-  const origin = environment.FRONTEND_ORIGIN
+  const origin = environment.PRIMARY_FRONTEND_ORIGIN
   const jsonHeaders = { 'Content-Type': 'application/json', Origin: origin }
 
   const unauthenticated = await fetch(`${serverUrl}/api/admin/restaurants`)

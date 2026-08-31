@@ -44,7 +44,7 @@ try {
   const testIp = `198.18.${Number.parseInt(testIpSuffix.slice(0, 2), 16)}.${Number.parseInt(testIpSuffix.slice(2), 16)}`
   const jsonHeaders = {
     'Content-Type': 'application/json',
-    Origin: environment.FRONTEND_ORIGIN,
+    Origin: environment.PRIMARY_FRONTEND_ORIGIN,
     'X-Forwarded-For': testIp,
   }
   const administratorLoginResponse = await fetch(`${serverUrl}/api/auth/sign-in/email`, {

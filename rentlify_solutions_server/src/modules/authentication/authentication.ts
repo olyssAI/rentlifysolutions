@@ -26,7 +26,7 @@ export const createAuthentication = ({
   cookiePrefix = 'rentlify',
   enableExpo = false,
   newAccountRole = defaultRole,
-  trustedOrigins = [environment.FRONTEND_ORIGIN],
+  trustedOrigins = environment.FRONTEND_ORIGINS,
 }: CreateAuthenticationOptions = {}) =>
   betterAuth({
     appName: 'Rentlify Solutions',
@@ -125,6 +125,6 @@ export const customerAuthentication = createAuthentication({
   cookiePrefix: 'rentlify-customer',
   enableExpo: true,
   newAccountRole: roles.customer,
-  trustedOrigins: [environment.FRONTEND_ORIGIN, 'rentlify-eats://'],
+  trustedOrigins: [...environment.FRONTEND_ORIGINS, 'rentlify-eats://'],
 })
 export const auth = authentication

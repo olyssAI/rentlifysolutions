@@ -10,7 +10,8 @@ import { contactEnquirySchema } from './contact-enquiry-validation.js'
 export const contactEnquiryRouter = Router()
 
 contactEnquiryRouter.use((request, _response, next) => {
-  if (request.get('origin') !== environment.MARKETING_SITE_ORIGIN) {
+  const origin = request.get('origin')
+  if (!origin || !environment.MARKETING_SITE_ORIGINS.includes(origin)) {
     throw new HttpError(403, 'UNTRUSTED_ORIGIN', 'This request origin is not allowed.')
   }
   next()

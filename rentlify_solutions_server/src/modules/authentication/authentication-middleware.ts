@@ -12,7 +12,8 @@ const safeMethods = new Set(['GET', 'HEAD', 'OPTIONS'])
  * Cookie-authenticated mutations therefore require the exact configured web origin.
  */
 export const requireTrustedMutationOrigin = (request: Request, response: Response, next: NextFunction) => {
-  if (safeMethods.has(request.method) || request.get('origin') === environment.FRONTEND_ORIGIN) {
+  const origin = request.get('origin')
+  if (safeMethods.has(request.method) || (origin !== undefined && environment.FRONTEND_ORIGINS.includes(origin))) {
     next()
     return
   }

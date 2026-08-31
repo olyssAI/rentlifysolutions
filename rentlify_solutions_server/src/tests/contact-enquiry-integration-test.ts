@@ -21,17 +21,18 @@ try {
 
   const address = server.address() as AddressInfo
   const serverUrl = `http://127.0.0.1:${address.port}`
+  const marketingTestOrigin = environment.MARKETING_SITE_ORIGINS.at(-1) ?? environment.PRIMARY_MARKETING_SITE_ORIGIN
 
   const preflightResponse = await fetch(`${serverUrl}/api/public/contact`, {
     method: 'OPTIONS',
     headers: {
-      Origin: environment.MARKETING_SITE_ORIGIN,
+      Origin: marketingTestOrigin,
       'Access-Control-Request-Method': 'POST',
       'Access-Control-Request-Headers': 'content-type',
     },
   })
   assert.equal(preflightResponse.status, 204)
-  assert.equal(preflightResponse.headers.get('access-control-allow-origin'), environment.MARKETING_SITE_ORIGIN)
+  assert.equal(preflightResponse.headers.get('access-control-allow-origin'), marketingTestOrigin)
 
   const untrustedOriginResponse = await fetch(`${serverUrl}/api/public/contact`, {
     method: 'POST',
@@ -42,7 +43,7 @@ try {
 
   const invalidPayloadResponse = await fetch(`${serverUrl}/api/public/contact`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Origin: environment.MARKETING_SITE_ORIGIN },
+    headers: { 'Content-Type': 'application/json', Origin: marketingTestOrigin },
     body: JSON.stringify({ unexpectedAuthorization: 'SUPER_ADMIN' }),
   })
   assert.equal(invalidPayloadResponse.status, 400)
@@ -55,7 +56,7 @@ try {
 
   const validPayloadResponse = await fetch(`${serverUrl}/api/public/contact`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Origin: environment.MARKETING_SITE_ORIGIN },
+    headers: { 'Content-Type': 'application/json', Origin: marketingTestOrigin },
     body: JSON.stringify({
       name: 'Contact Test Customer',
       email: testEmail,

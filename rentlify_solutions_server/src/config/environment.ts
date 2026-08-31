@@ -4,6 +4,30 @@ import { z } from 'zod'
 const optionalEnvironmentValue = <Schema extends z.ZodType>(schema: Schema) =>
   z.preprocess((value) => (value === '' ? undefined : value), schema.optional())
 
+const httpOriginSchema = z
+  .string()
+  .url()
+  .refine((value) => {
+    const url = new URL(value)
+    return (
+      (url.protocol === 'http:' || url.protocol === 'https:') &&
+      url.pathname === '/' &&
+      !url.username &&
+      !url.password &&
+      !url.search &&
+      !url.hash
+    )
+  }, 'Origins must contain only an HTTP or HTTPS scheme and host, without a path, credentials, query, or fragment.')
+  .transform((value) => new URL(value).origin)
+
+const originAllowlistSchema = (legacyValue: string | undefined, developmentDefault: string) =>
+  z
+    .string()
+    .default(legacyValue ?? developmentDefault)
+    .transform((value) => value.split(',').map((entry) => entry.trim()))
+    .pipe(z.array(httpOriginSchema).min(1))
+    .transform((origins) => [...new Set(origins)])
+
 const environmentSchema = z
   .object({
     NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
@@ -16,8 +40,8 @@ const environmentSchema = z
       }),
     BETTER_AUTH_SECRET: z.string().min(32),
     BETTER_AUTH_URL: z.string().url(),
-    FRONTEND_ORIGIN: z.string().url(),
-    MARKETING_SITE_ORIGIN: z.string().url().default('http://localhost:3000'),
+    FRONTEND_ORIGINS: originAllowlistSchema(process.env.FRONTEND_ORIGIN, 'http://localhost:5174'),
+    MARKETING_SITE_ORIGINS: originAllowlistSchema(process.env.MARKETING_SITE_ORIGIN, 'http://localhost:3000'),
     COOKIE_SAME_SITE: z.enum(['lax', 'strict', 'none']).default('lax'),
     COOKIE_SECURE: z.stringbool().default(false),
     /**
@@ -78,8 +102,8 @@ const environmentSchema = z
     if (values.NODE_ENV === 'production') {
       for (const [name, url] of [
         ['BETTER_AUTH_URL', values.BETTER_AUTH_URL],
-        ['FRONTEND_ORIGIN', values.FRONTEND_ORIGIN],
-        ['MARKETING_SITE_ORIGIN', values.MARKETING_SITE_ORIGIN],
+        ...values.FRONTEND_ORIGINS.map((origin) => ['FRONTEND_ORIGINS', origin] as const),
+        ...values.MARKETING_SITE_ORIGINS.map((origin) => ['MARKETING_SITE_ORIGINS', origin] as const),
       ] as const) {
         if (!url.startsWith('https://')) {
           context.addIssue({ code: 'custom', path: [name], message: `${name} must use HTTPS in production.` })
@@ -105,4 +129,16 @@ const environmentSchema = z
     }
   })
 
-export const environment = environmentSchema.parse(process.env)
+const parsedEnvironment = environmentSchema.parse(process.env)
+const [primaryFrontendOrigin] = parsedEnvironment.FRONTEND_ORIGINS
+const [primaryMarketingSiteOrigin] = parsedEnvironment.MARKETING_SITE_ORIGINS
+
+if (!primaryFrontendOrigin || !primaryMarketingSiteOrigin) {
+  throw new Error('At least one operational and marketing origin is required.')
+}
+
+export const environment = {
+  ...parsedEnvironment,
+  PRIMARY_FRONTEND_ORIGIN: primaryFrontendOrigin,
+  PRIMARY_MARKETING_SITE_ORIGIN: primaryMarketingSiteOrigin,
+}

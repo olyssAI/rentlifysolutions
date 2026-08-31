@@ -214,7 +214,7 @@ try {
   const checkoutPreflightResponse = await fetch(`${serverUrl}/api/customer/restaurants/${restaurantSlug}/orders`, {
     method: 'OPTIONS',
     headers: {
-      Origin: environment.FRONTEND_ORIGIN,
+      Origin: environment.PRIMARY_FRONTEND_ORIGIN,
       'Access-Control-Request-Method': 'POST',
       'Access-Control-Request-Headers': 'content-type,idempotency-key',
     },
@@ -224,14 +224,14 @@ try {
 
   const unauthenticatedResponse = await fetch(`${serverUrl}/api/customer/restaurants/${restaurantSlug}/cart/validate`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Origin: environment.FRONTEND_ORIGIN },
+    headers: { 'Content-Type': 'application/json', Origin: environment.PRIMARY_FRONTEND_ORIGIN },
     body: '{}',
   })
   assert.equal(unauthenticatedResponse.status, 401)
 
   const loginResponse = await fetch(`${serverUrl}/api/customer-auth/sign-in/email`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Origin: environment.FRONTEND_ORIGIN },
+    headers: { 'Content-Type': 'application/json', Origin: environment.PRIMARY_FRONTEND_ORIGIN },
     body: JSON.stringify({ email: customerEmail, password: customerPassword }),
   })
   assert.equal(loginResponse.status, 200)
@@ -239,7 +239,7 @@ try {
   assert(customerCookie)
   const authenticatedHeaders = {
     'Content-Type': 'application/json',
-    Origin: environment.FRONTEND_ORIGIN,
+    Origin: environment.PRIMARY_FRONTEND_ORIGIN,
     Cookie: customerCookie,
   }
   const cart = {
@@ -340,13 +340,13 @@ try {
   })
   const otherLoginResponse = await fetch(`${serverUrl}/api/customer-auth/sign-in/email`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Origin: environment.FRONTEND_ORIGIN },
+    headers: { 'Content-Type': 'application/json', Origin: environment.PRIMARY_FRONTEND_ORIGIN },
     body: JSON.stringify({ email: otherCustomerEmail, password: customerPassword }),
   })
   assert.equal(otherLoginResponse.status, 200)
   const otherCustomerHeaders = {
     'Content-Type': 'application/json',
-    Origin: environment.FRONTEND_ORIGIN,
+    Origin: environment.PRIMARY_FRONTEND_ORIGIN,
     Cookie: cookieFrom(otherLoginResponse),
   }
   const otherHistoryResponse = await fetch(`${serverUrl}/api/customer/orders`, { headers: otherCustomerHeaders })

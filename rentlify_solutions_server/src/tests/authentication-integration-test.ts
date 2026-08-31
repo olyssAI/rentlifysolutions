@@ -8,7 +8,7 @@ import { eq } from 'drizzle-orm'
 import { createApplication } from '../app.js'
 import { environment } from '../config/environment.js'
 import { database, databasePool } from '../database/client.js'
-import { user } from '../database/schema/auth-schema.js'
+import { rateLimit, user } from '../database/schema/auth-schema.js'
 import { createAuthentication } from '../modules/authentication/authentication.js'
 import { roles } from '../modules/authentication/roles.js'
 
@@ -19,8 +19,10 @@ const requiredCredential = (name: string, value: string | undefined) => {
 
 const application = createApplication()
 const server = application.listen(0, '127.0.0.1')
+const localSignUpRateLimitKey = '127.0.0.1|/sign-up/email'
 
 try {
+  await database.delete(rateLimit).where(eq(rateLimit.key, localSignUpRateLimitKey))
   await new Promise<void>((resolve, reject) => {
     server.once('listening', resolve)
     server.once('error', reject)
@@ -30,7 +32,8 @@ try {
   const serverUrl = `http://127.0.0.1:${address.port}`
   const email = requiredCredential('SUPER_ADMIN_EMAIL', environment.SUPER_ADMIN_EMAIL)
   const password = requiredCredential('SUPER_ADMIN_PASSWORD', environment.SUPER_ADMIN_PASSWORD)
-  const jsonHeaders = { 'Content-Type': 'application/json', Origin: environment.FRONTEND_ORIGIN }
+  const authenticationTestOrigin = environment.FRONTEND_ORIGINS.at(-1) ?? environment.PRIMARY_FRONTEND_ORIGIN
+  const jsonHeaders = { 'Content-Type': 'application/json', Origin: authenticationTestOrigin }
 
   if (environment.NODE_ENV === 'production') {
     assert(
@@ -118,14 +121,14 @@ try {
   )
 
   const sessionResponse = await fetch(`${serverUrl}/api/auth/get-session`, {
-    headers: { Cookie: sessionCookie, Origin: environment.FRONTEND_ORIGIN },
+    headers: { Cookie: sessionCookie, Origin: environment.PRIMARY_FRONTEND_ORIGIN },
   })
   assert.equal(sessionResponse.status, 200)
   const session = (await sessionResponse.json()) as { user?: { role?: string } } | null
   assert.equal(session?.user?.role, 'SUPER_ADMIN')
 
   const protectedResponse = await fetch(`${serverUrl}/api/authenticated/session`, {
-    headers: { Cookie: sessionCookie, Origin: environment.FRONTEND_ORIGIN },
+    headers: { Cookie: sessionCookie, Origin: environment.PRIMARY_FRONTEND_ORIGIN },
   })
   assert.equal(protectedResponse.status, 200)
 
@@ -159,7 +162,7 @@ try {
       .join('; ')
 
     const forbiddenResponse = await fetch(`${serverUrl}/api/authenticated/session`, {
-      headers: { Cookie: nonPrivilegedCookie, Origin: environment.FRONTEND_ORIGIN },
+      headers: { Cookie: nonPrivilegedCookie, Origin: environment.PRIMARY_FRONTEND_ORIGIN },
     })
     assert.equal(forbiddenResponse.status, 403)
     const forbiddenBody = (await forbiddenResponse.json()) as { error?: { code?: string } }
@@ -170,12 +173,12 @@ try {
 
   const logoutResponse = await fetch(`${serverUrl}/api/auth/sign-out`, {
     method: 'POST',
-    headers: { Cookie: sessionCookie, Origin: environment.FRONTEND_ORIGIN },
+    headers: { Cookie: sessionCookie, Origin: environment.PRIMARY_FRONTEND_ORIGIN },
   })
   assert.equal(logoutResponse.status, 200)
 
   const expiredSessionResponse = await fetch(`${serverUrl}/api/auth/get-session`, {
-    headers: { Cookie: sessionCookie, Origin: environment.FRONTEND_ORIGIN },
+    headers: { Cookie: sessionCookie, Origin: environment.PRIMARY_FRONTEND_ORIGIN },
   })
   assert.equal(expiredSessionResponse.status, 200)
   assert.equal(await expiredSessionResponse.json(), null)
@@ -187,5 +190,6 @@ try {
   await new Promise<void>((resolve, reject) => {
     server.close((error) => (error ? reject(error) : resolve()))
   })
+  await database.delete(rateLimit).where(eq(rateLimit.key, localSignUpRateLimitKey))
   await databasePool.end()
 }
