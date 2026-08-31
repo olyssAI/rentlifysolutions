@@ -1,0 +1,7 @@
+packages:
+  - rentlify_solutions_shared
+  - rentlify_solutions_web
+  - rentlify_solutions_server
+
+onlyBuiltDependencies:
+  - esbuild

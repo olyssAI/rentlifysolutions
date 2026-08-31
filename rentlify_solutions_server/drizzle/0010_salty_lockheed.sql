@@ -1,0 +1,2 @@
+DROP INDEX "location_opening_hour_schedule_unique";--> statement-breakpoint
+CREATE UNIQUE INDEX "location_opening_hour_schedule_unique" ON "location_opening_hour" USING btree ("location_id","day_of_week","fulfillment_type","opens_at");

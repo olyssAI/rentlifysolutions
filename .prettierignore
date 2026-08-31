@@ -1,0 +1,14 @@
+node_modules/
+dist/
+coverage/
+playwright-report/
+test-results/
+rentlify_solutions_server/drizzle/
+rentlify_solutions_web/src/components/ui/
+rentlify_solutions_nextjs/src/components/ui/
+rentlify_solutions_nextjs/.next/
+pnpm-lock.yaml
+*.log
+.env
+.env.*
+!.env.example
