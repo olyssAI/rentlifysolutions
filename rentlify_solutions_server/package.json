@@ -16,6 +16,8 @@
     "auth:generate": "pnpm dlx auth@1.6.29 generate --config src/modules/authentication/authentication.ts --output src/database/schema/auth-schema.ts --yes",
     "seed:platform": "tsx src/database/seeds/seed-platform-catalog.ts",
     "seed:super-admin": "tsx src/database/seeds/seed-super-administrator.ts",
+    "reset:testing-data": "tsx src/database/scripts/reset-testing-data.ts",
+    "audit:testing-data": "tsx src/database/scripts/audit-testing-data.ts",
     "test:authentication": "tsx src/tests/authentication-integration-test.ts",
     "test:client-ip": "tsx src/tests/client-ip-resolution.ts",
     "test:permissions": "tsx src/tests/authorization-permission-catalog-test.ts",
