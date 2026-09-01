@@ -4,6 +4,9 @@ import pino from 'pino'
 
 import { environment } from '../config/environment.js'
 
+const databaseHostname = new URL(environment.DATABASE_URL).hostname.toLowerCase()
+const usesRailwayPrivateNetwork = databaseHostname.endsWith('.railway.internal')
+
 export const databasePool = new Pool({
   connectionString: environment.DATABASE_URL,
   max: 10,
@@ -13,7 +16,11 @@ export const databasePool = new Pool({
   keepAliveInitialDelayMillis: 10_000,
   // Rotate long-lived sockets before common managed-PostgreSQL/proxy lifetime limits.
   maxLifetimeSeconds: 300,
-  ssl: environment.NODE_ENV === 'production' ? { rejectUnauthorized: true } : false,
+  // Railway's private service network is already encrypted with WireGuard and its PostgreSQL
+  // template presents a self-signed certificate. Disable PostgreSQL-layer TLS only for that
+  // private DNS boundary; every externally hosted production database still requires a
+  // certificate chain trusted by Node.js.
+  ssl: environment.NODE_ENV === 'production' && !usesRailwayPrivateNetwork ? { rejectUnauthorized: true } : false,
 })
 
 const databaseLogger = pino({ name: 'database-pool' })

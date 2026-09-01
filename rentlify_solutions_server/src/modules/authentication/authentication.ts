@@ -104,7 +104,10 @@ export const createAuthentication = ({
        * rate-limit bucket per request.
        */
       ipAddress: {
-        ipAddressHeaders: ['x-forwarded-for'],
+        // Railway overwrites x-real-ip with the originating client address. Its forwarded chain
+        // also contains an intermediate public edge address whose range is not a stable deployment
+        // contract; choosing that hop would make unrelated customers share one rate-limit bucket.
+        ipAddressHeaders: ['x-real-ip', 'x-forwarded-for'],
         trustedProxies: environment.TRUSTED_PROXY_IPS,
       },
       cookiePrefix,
