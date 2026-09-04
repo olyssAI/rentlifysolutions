@@ -10,23 +10,23 @@ export function RestaurantQuestionsAccordion() {
   const shouldReduceMotion = useReducedMotion()
 
   return (
-    <div className="rounded-2xl border border-[#e7ddd4] bg-white px-6">
+    <div className="rounded-[2rem] border border-[#e5d8e9] bg-[#fffdf8] px-5 shadow-[0_20px_60px_rgba(63,17,89,.08)] sm:px-8">
       {questions.map(({ question, answer }, questionIndex) => {
         const isQuestionOpen = openQuestionIndex === questionIndex
         const contentIdentifier = `restaurant-question-${questionIndex}`
         return (
-          <div className="border-b border-[#e7ddd4] last:border-0" key={question}>
+          <div className="border-b border-[#e5d8e9] last:border-0" key={question}>
             <button
               aria-controls={contentIdentifier}
               aria-expanded={isQuestionOpen}
-              className="group flex w-full items-center justify-between gap-6 py-5 text-left text-base font-medium"
+              className="group flex w-full items-center justify-between gap-6 py-6 text-left text-base font-black text-[#27172e] sm:text-lg"
               onClick={() => setOpenQuestionIndex(isQuestionOpen ? null : questionIndex)}
               type="button"
             >
               <span>{question}</span>
               <ChevronDown
                 aria-hidden="true"
-                className={`size-5 shrink-0 text-[#746b66] transition-transform duration-200 group-hover:text-[#dc3b2f] ${isQuestionOpen ? 'rotate-180' : ''}`}
+                className={`size-5 shrink-0 text-[#6f2da8] transition-transform duration-200 ${isQuestionOpen ? 'rotate-180' : ''}`}
               />
             </button>
             <AnimatePresence initial={false}>
@@ -38,7 +38,7 @@ export function RestaurantQuestionsAccordion() {
                   initial={shouldReduceMotion ? false : { height: 0, opacity: 0 }}
                   transition={{ duration: shouldReduceMotion ? 0 : 0.22, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  <p className="pb-5 pr-8 leading-7 text-[#746b66]">{answer}</p>
+                  <p className="max-w-2xl pb-6 pr-8 leading-7 text-[#75677c]">{answer}</p>
                 </motion.div>
               ) : null}
             </AnimatePresence>

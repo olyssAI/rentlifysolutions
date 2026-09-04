@@ -2,9 +2,9 @@ import { createSearchEngineMetadata } from '@/configuration/search-engine-metada
 import { RestaurantsPage } from '@/modules/landing/restaurants/restaurants-page'
 
 export const metadata = createSearchEngineMetadata({
-  title: 'Restaurant Ordering App and Management Platform',
+  title: 'Complete Restaurant Management and Ordering Platform',
   description:
-    'Give your restaurant a branded customer ordering app, published digital menu, cash ordering, and an owner management dashboard through a monthly plan.',
+    'Connect your branded restaurant app, website, digital menu, online orders, kitchen workflow, delivery, branches, customers, loyalty, inventory, and reporting through one scalable platform.',
   pathname: '/restaurants',
 })
 

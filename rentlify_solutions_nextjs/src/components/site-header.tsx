@@ -74,6 +74,9 @@ export function SiteHeader() {
           <a
             className="group mx-2 mt-2 flex h-10 items-center justify-center gap-2 border border-[#6d35b4] px-4 font-bold text-[#6d35b4] transition hover:bg-[#ede5f4] md:hidden"
             href="https://app.rentlifysolutions.com"
+            onClick={() => setIsNavigationOpen(false)}
+            rel="noopener noreferrer"
+            target="_blank"
           >
             Login <ArrowUpRight size={16} />
           </a>
@@ -83,6 +86,7 @@ export function SiteHeader() {
               isMeetingPageActive ? 'border-2 border-[#6d35b4] bg-[#ede5f4] text-[#6d35b4]' : 'bg-[#6d35b4] text-white'
             }`}
             href="/book-a-meeting"
+            onClick={() => setIsNavigationOpen(false)}
           >
             Book a meeting
           </Link>
@@ -91,6 +95,8 @@ export function SiteHeader() {
           <a
             className="group inline-flex h-9 items-center gap-2 border border-[#6d35b4] px-4 text-sm font-bold text-[#6d35b4] transition hover:bg-[#ede5f4]"
             href="https://app.rentlifysolutions.com"
+            rel="noopener noreferrer"
+            target="_blank"
           >
             Login{' '}
             <ArrowUpRight className="transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" size={16} />

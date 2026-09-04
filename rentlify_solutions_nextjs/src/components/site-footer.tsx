@@ -61,6 +61,8 @@ export function SiteFooter() {
           <Link
             className="group inline-flex w-fit items-center gap-2 font-semibold text-white/60 transition-colors hover:text-white"
             href="https://app.rentlifysolutions.com"
+            rel="noopener noreferrer"
+            target="_blank"
           >
             Business login
             <ArrowUpRight

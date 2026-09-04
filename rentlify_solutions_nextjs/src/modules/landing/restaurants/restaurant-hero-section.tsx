@@ -1,84 +1,84 @@
-import { ArrowRight, Bell, Check, ChevronRight, PackageX, Utensils } from 'lucide-react'
+import { ArrowRight, Check, ChefHat, CircleDollarSign } from 'lucide-react'
+import Image from 'next/image'
 import Link from 'next/link'
-import { RestaurantMobileAppPreview } from './restaurant-mobile-app-preview'
 
-const restaurantAssurances = [
-  'One app per restaurant',
-  'Dine-in, takeaway and delivery',
-  'Managed from a phone',
+import { Reveal } from '@/components/motion-reveal'
+
+const restaurantHeroBenefits = [
+  'Direct customer ordering',
+  'Menu and kitchen control',
+  'Live restaurant reporting',
 ] as const
 
 export function RestaurantHeroSection() {
   return (
-    <section className="border-b border-[#e7ddd4] bg-[#fcf7ef] pb-20 pt-12 lg:pb-28 lg:pt-16" id="restaurant-top">
-      <div className="mx-auto grid w-full max-w-7xl items-center gap-16 px-5 lg:grid-cols-[1.05fr_.95fr] lg:gap-12 lg:px-8">
-        <div className="max-w-2xl">
-          <h1 className="text-5xl font-semibold leading-[.96] tracking-[-.055em] text-balance sm:text-6xl lg:text-7xl">
-            Your restaurant.
-            <br />
-            <span className="text-[#dc3b2f]">Their favourite app.</span>
-          </h1>
-          <p className="mt-7 max-w-xl text-lg leading-8 text-[#746b66]">
-            A branded ordering app for your restaurant, with the menu, offers and orders managed from one place. Your
-            customers order from you, not from a marketplace.
+    <section className="relative isolate overflow-hidden bg-[#2b0746] text-white" id="restaurant-top">
+      <div className="absolute right-0 top-0 h-56 w-32 rounded-bl-[7rem] bg-[#f7c928] sm:w-52 lg:h-full lg:w-[12%] lg:rounded-bl-[12rem]" />
+      <div className="absolute bottom-0 left-0 h-3 w-2/5 bg-[#f7c928]" />
+      <div aria-hidden="true" className="absolute left-[47%] top-16 hidden grid-cols-4 gap-3 opacity-20 lg:grid">
+        {Array.from({ length: 16 }, (_, index) => (
+          <span className="size-1.5 rounded-full bg-[#f7c928]" key={index} />
+        ))}
+      </div>
+
+      <div className="relative mx-auto grid min-h-[720px] w-[min(1540px,calc(100%-3rem))] items-center gap-16 py-16 max-md:w-[calc(100%-1.5rem)] lg:grid-cols-[.76fr_1.24fr] lg:py-20">
+        <Reveal className="relative z-10 max-w-2xl">
+          <p className="text-xs font-black uppercase tracking-[.17em] text-[#f7c928]">
+            Restaurant software without the upfront build
           </p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <Link
-              className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-[#dc3b2f] px-6 text-base font-semibold text-white hover:bg-[#c93127]"
-              href="/book-a-meeting"
-            >
-              Book a demo <ArrowRight size={16} />
-            </Link>
-            <a
-              className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-[#e0d6ce] bg-white px-6 text-base font-semibold hover:bg-[#f1ece7]"
-              href="#restaurant-platform"
-            >
-              See the platform <ChevronRight size={16} />
-            </a>
-          </div>
-          <ul className="mt-9 flex flex-wrap gap-x-6 gap-y-3 text-sm text-[#746b66]">
-            {restaurantAssurances.map((assurance) => (
-              <li className="flex items-center gap-2" key={assurance}>
-                <span className="grid size-5 place-items-center rounded-full bg-[#e4f6e9] text-[#32865c]">
-                  <Check className="size-3" />
+          <h1 className="mt-6 text-[clamp(2.7rem,4.5vw,4.8rem)] font-black leading-[.95] tracking-[-.05em] text-balance">
+            Run your restaurant <span className="text-[#f7c928]">from one place.</span>
+          </h1>
+          <p className="mt-7 max-w-xl text-base leading-7 text-white/70 sm:text-lg sm:leading-8">
+            Your own ordering experience for customers, with practical tools for menus, orders, kitchen work,
+            locations and daily performance.
+          </p>
+
+          <ul className="mt-7 grid gap-3 text-sm sm:grid-cols-2">
+            {restaurantHeroBenefits.map((benefit) => (
+              <li className="flex items-center gap-3 text-white/80" key={benefit}>
+                <span className="grid size-6 place-items-center rounded-full bg-[#f7c928] text-[#2b0746]">
+                  <Check className="size-3.5" strokeWidth={3} />
                 </span>
-                {assurance}
+                {benefit}
               </li>
             ))}
           </ul>
-          <div className="mt-10 flex items-center gap-4 border-t border-[#e7ddd4] pt-7">
-            <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-[#2c2825] text-white">
-              <Utensils className="size-5" />
-            </span>
-            <p className="max-w-sm text-sm leading-6 text-[#746b66]">
-              Now opening to a first group of restaurants shaping the platform alongside us.
-            </p>
+
+          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+            <Link
+              className="group inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#f7c928] px-5 text-sm font-black text-[#2b0746] transition hover:-translate-y-0.5 hover:bg-white"
+              href="/book-a-meeting"
+            >
+              Book a restaurant demo
+              <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+            </Link>
+            <a
+              className="inline-flex min-h-12 items-center justify-center rounded-xl border border-white/25 px-5 text-sm font-bold text-white transition hover:border-white hover:bg-white/10"
+              href="#complete-platform"
+            >
+              See what is included
+            </a>
           </div>
-        </div>
-        <div className="flex flex-col items-center gap-8 lg:flex-row lg:justify-end">
-          <div className="order-2 grid w-full max-w-[330px] gap-3 sm:max-w-none sm:grid-cols-2 lg:order-1 lg:w-56 lg:shrink-0 lg:grid-cols-1">
-            {[
-              [Bell, 'New order', '#1048 received', 'bg-[#e4f6e9] text-[#32865c]'],
-              [PackageX, 'Buffalo Wings', 'Marked sold out', 'bg-[#f1ece7] text-[#746b66]'],
-            ].map(([Icon, eyebrow, title, iconClassName]) => (
-              <div
-                className="flex items-center gap-3 rounded-xl border border-[#e7ddd4] bg-white p-3"
-                key={title as string}
-              >
-                <span className={`grid size-10 shrink-0 place-items-center rounded-xl ${iconClassName as string}`}>
-                  <Icon className="size-5" />
-                </span>
-                <div>
-                  <p className="text-xs text-[#746b66]">{eyebrow as string}</p>
-                  <p className="font-semibold">{title as string}</p>
-                </div>
-              </div>
-            ))}
+
+          <div className="mt-10 flex flex-wrap gap-x-8 gap-y-3 border-t border-white/15 pt-6 text-xs text-white/55">
+            <span className="flex items-center gap-2"><CircleDollarSign className="size-4 text-[#f7c928]" /> No marketplace commission</span>
+            <span className="flex items-center gap-2"><ChefHat className="size-4 text-[#f7c928]" /> Built for restaurant teams</span>
           </div>
-          <div className="order-1 w-[330px] max-w-full shrink-0 lg:order-2">
-            <RestaurantMobileAppPreview />
+        </Reveal>
+
+        <Reveal className="relative z-10 mx-auto w-full max-w-[900px] lg:mr-[-2vw]" delay={0.12}>
+          <div className="relative aspect-[3/2] w-full overflow-hidden rounded-[2rem] border border-white/10 shadow-[0_38px_90px_rgba(13,2,18,.38)]">
+            <Image
+              alt="Restaurant owner dashboard with customer ordering app"
+              className="object-cover"
+              fill
+              priority
+              sizes="(max-width: 1024px) 94vw, 58vw"
+              src="/images/restaurants/restaurant-platform-real-dashboard-v5.png"
+            />
           </div>
-        </div>
+        </Reveal>
       </div>
     </section>
   )
